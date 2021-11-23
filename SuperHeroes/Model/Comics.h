@@ -11,7 +11,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 @interface Comics : NSObject
 @property NSNumber *comicsId;
-@property NSString *desc;
+@property NSString *comicsDesc;
 @property NSString *comicsImg;
 @property NSString *comicsTitle;
 

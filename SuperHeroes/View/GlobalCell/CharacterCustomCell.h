@@ -10,7 +10,6 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface CharacterCustomCell : UITableViewCell
-
 @property (strong, nonatomic) IBOutlet UIImageView *imgCh;
 @property (strong, nonatomic) IBOutlet UILabel *lblHeroName;
 

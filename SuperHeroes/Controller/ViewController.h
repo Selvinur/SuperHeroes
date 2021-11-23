@@ -17,6 +17,7 @@
 @property NSMutableArray *heroesArray;
 @property UIImageView *heroesImage;
 @property SuperHeroes *superHero;
+
 @property NSString *apiKey;
 @property NSString *timeStamp;
 @property NSString *hashKey;

@@ -20,7 +20,7 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath{
-    return 200;
+    return 150;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
@@ -41,24 +41,34 @@
     
     Comics *c =[comicsArray objectAtIndex:indexPath.row];
    
-    if([c.desc isEqualToString:@""]){
+    if(c.comicsDesc==nil ||  [c.comicsDesc isEqualToString:@""]){
         cell.lblComics.text=@"Description Not Found";
     }else
-        cell.lblComics.text=c.desc;
+        cell.lblComics.text=c.comicsDesc;
+    if(c.comicsTitle==nil ||  [c.comicsTitle isEqualToString:@""])
+    cell.lblTitle.text=@"title hata";
+    else{
     cell.lblTitle.text=c.comicsTitle;
     cell.lblTitle.adjustsFontSizeToFitWidth=YES;
-    
+    }
     UIView* separatorLineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 414, 5)];
     separatorLineView.backgroundColor = [UIColor whiteColor];
     [cell.contentView addSubview:separatorLineView];
-    cell.imgComics.layer.cornerRadius=10;
-    [cell.imgComics setImageWithURL:[NSURL URLWithString:c.comicsImg]];
-    return cell;
+    if(c.comicsImg==nil || [c.comicsImg isEqualToString:@""]){
+        NSLog(@"HATA image");
+    }
+    
+    else{
+        cell.imgComics.layer.cornerRadius=10;
+        [cell.imgComics setImageWithURL:[NSURL URLWithString:c.comicsImg]];
+        
+    }
+        return cell;
 }
 
 -(void)serviceCall{
     ViewController *controller=[ViewController new];
-    [self getRequest:[NSString stringWithFormat:@"%@/v1/public/characters/%@/comics?&ts=%@&apikey=%@&hash=%@",controller.baseURL,obj.heroId, controller.timeStamp,controller.apiKey,controller.hashKey] completion:^(NSDictionary *_Nonnull dictionary, NSError *_Nonnull error) {
+    [self getRequest:[NSString stringWithFormat:@"%@/v1/public/characters/%@/comics?limit=5&ts=%@&apikey=%@&hash=%@",controller.baseURL,obj.heroId, controller.timeStamp,controller.apiKey,controller.hashKey] completion:^(NSDictionary *_Nonnull dictionary, NSError *_Nonnull error) {
     }];
 }
 
@@ -76,10 +86,11 @@
     NSDictionary *data = [response valueForKey:@"data"];
     NSArray *results = [data valueForKey:@"results"];
     comicsArray= [NSMutableArray arrayWithCapacity:results.count];
+   
     for(NSDictionary *item in results){
         Comics *comics=[[Comics alloc] init];
         comics.comicsId=[item valueForKey:@"id"];
-        comics.desc=[item valueForKey:@"description"];
+        comics.comicsDesc=[item valueForKey:@"description"];
         comics.comicsTitle=[item valueForKey:@"title"];
         NSDictionary *thumbnail = [item valueForKey:@"thumbnail"];
         NSString *thumbnailUrl = [NSString stringWithFormat:@"%@.%@", [thumbnail valueForKey:@"path"], [thumbnail valueForKey:@"extension"]];
